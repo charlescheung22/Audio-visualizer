@@ -41,7 +41,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Mixer.Info mixerInfo = getPrimarySoundDriverMixerInfo();
+        Mixer.Info mixerInfo = getPrimarySoundDriverMixerInfo();  // HELP TODO None of the available mixers have target data lines at all????
 
         if (mixerInfo == null) {  // TODO: consider using Optionals
             throw new IllegalArgumentException("No primary sound driver mixer info found");
@@ -49,7 +49,6 @@ public class Main {
 
         AudioFormat format = getWindowsDefaultAudioFormat();
         Mixer mixer = AudioSystem.getMixer(mixerInfo);
-
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format); // format is an AudioFormat object
         if (!mixer.isLineSupported(info)) {
             throw new IllegalArgumentException("Line not supported");
@@ -60,7 +59,7 @@ public class Main {
             TargetDataLine line = (TargetDataLine) mixer.getLine(info);  // safe cast, checked for TargetDataLine above
             line.open(format);
         } catch (LineUnavailableException lue) {
-            lue.printStackTrace();  // TODO: get rid of error by doing throw new RuntimeException(lue); or something
+            throw new RuntimeException(lue);
         }
 
     }
